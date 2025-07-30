@@ -13,12 +13,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.texthip.thip.R
 import com.texthip.thip.ui.common.buttons.FloatingButton
 import com.texthip.thip.ui.common.topappbar.LogoTopAppBar
@@ -39,7 +38,7 @@ fun GroupScreen(
     onNavigateToGroupMy: () -> Unit = {},   // 내 모임방 화면으로 이동
     onNavigateToGroupRecruit: (Int) -> Unit = {},   // 모집 중인 모임방 화면으로 이동
     onNavigateToGroupRoom: (Int) -> Unit = {},  // 기록장 화면으로 이동
-    viewModel: GroupViewModel = viewModel()
+    viewModel: GroupViewModel = hiltViewModel()
 ) {
     val myGroups by viewModel.myGroups.collectAsState()
     val roomSections by viewModel.roomSections.collectAsState()
@@ -118,7 +117,6 @@ fun GroupScreen(
 @Composable
 fun PreviewGroupScreen() {
     ThipTheme {
-        val previewViewModel = remember { GroupViewModel() }
-        GroupScreen(viewModel = previewViewModel)
+        GroupScreen()
     }
 }

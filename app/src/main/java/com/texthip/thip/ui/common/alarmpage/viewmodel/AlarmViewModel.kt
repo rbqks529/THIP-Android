@@ -2,11 +2,14 @@ package com.texthip.thip.ui.common.alarmpage.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.texthip.thip.ui.common.alarmpage.mock.AlarmItem
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
-class AlarmViewModel : ViewModel() {
+@HiltViewModel
+class AlarmViewModel @Inject constructor() : ViewModel() {
     private val _alarmItems = MutableStateFlow<List<AlarmItem>>(emptyList())
     val alarmItems: StateFlow<List<AlarmItem>> = _alarmItems.asStateFlow()
 

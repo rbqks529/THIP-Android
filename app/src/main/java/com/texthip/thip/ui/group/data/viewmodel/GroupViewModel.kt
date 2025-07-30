@@ -3,18 +3,20 @@ package com.texthip.thip.ui.group.data.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.texthip.thip.ui.group.data.repository.GroupRepository
-import com.texthip.thip.ui.group.data.repository.GroupRepositoryImpl
 import com.texthip.thip.ui.group.myroom.mock.GroupCardData
 import com.texthip.thip.ui.group.myroom.mock.GroupCardItemRoomData
 import com.texthip.thip.ui.group.myroom.mock.GroupRoomSectionData
 import com.texthip.thip.ui.group.myroom.mock.GroupRoomData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GroupViewModel(
-    private val repository: GroupRepository = GroupRepositoryImpl()
+@HiltViewModel
+class GroupViewModel @Inject constructor(
+    private val repository: GroupRepository
 ) : ViewModel() {
 
     private val _myGroups = MutableStateFlow<List<GroupCardData>>(emptyList())

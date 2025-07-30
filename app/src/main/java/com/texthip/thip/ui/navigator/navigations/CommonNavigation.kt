@@ -1,6 +1,6 @@
 package com.texthip.thip.ui.navigator.navigations
 
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -15,7 +15,7 @@ import com.texthip.thip.ui.navigator.extensions.navigateBack
 fun NavGraphBuilder.commonNavigation(navController: NavHostController) {
     // Alarm 화면
     composable<CommonRoutes.Alarm> {
-        val alarmViewModel: AlarmViewModel = viewModel()
+        val alarmViewModel: AlarmViewModel = hiltViewModel()
         val alarmItems by alarmViewModel.alarmItems.collectAsState()
         
         AlarmScreen(

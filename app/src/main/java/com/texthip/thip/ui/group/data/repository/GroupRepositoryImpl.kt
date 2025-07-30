@@ -7,11 +7,12 @@ import com.texthip.thip.ui.group.myroom.mock.GroupCardItemRoomData
 import com.texthip.thip.ui.group.myroom.mock.GroupRoomData
 import com.texthip.thip.ui.group.myroom.mock.GroupRoomSectionData
 import kotlinx.coroutines.delay
+import javax.inject.Inject
 
 // GroupRepository의 구현
 // 실제로는 서버의 API와 통신할 거라서 다 삭제하고 함수 구조만 유지한 채 수정하면 될 듯 합니다.
 
-class GroupRepositoryImpl : GroupRepository {
+class GroupRepositoryImpl @Inject constructor() : GroupRepository {
     
     private val genres = listOf("문학", "과학·IT", "사회과학", "인문학", "예술")
     private val roomDetailsCache = mutableMapOf<Int, GroupRoomData>()

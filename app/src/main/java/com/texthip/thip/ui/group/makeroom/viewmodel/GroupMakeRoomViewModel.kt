@@ -3,18 +3,17 @@ package com.texthip.thip.ui.group.makeroom.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.texthip.thip.ui.group.makeroom.mock.BookData
-import com.texthip.thip.ui.group.makeroom.mock.GroupMakeRoomRequest
 import com.texthip.thip.ui.group.makeroom.mock.GroupMakeRoomUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import javax.inject.Inject
 
-// 나중에 서버와 연동할 때 사용할 뷰모델 예시
-class GroupMakeRoomViewModel(
-    private val groupRepository: GroupRepository = MockGroupRepository() // 기본값으로 Mock Repository 사용
-) : ViewModel() {
+@HiltViewModel
+class GroupMakeRoomViewModel @Inject constructor() : ViewModel() {
 
     private val _uiState = MutableStateFlow(GroupMakeRoomUiState())
     val uiState: StateFlow<GroupMakeRoomUiState> = _uiState.asStateFlow()
@@ -86,13 +85,17 @@ class GroupMakeRoomViewModel(
                 _uiState.value = currentState.copy(isLoading = true, errorMessage = null)
 
                 val request = currentState.toRequest()
-                val result = groupRepository.createGroup(request)
-
-                if (result.isSuccess) {
-                    onSuccess()
-                } else {
-                    //onError(result.message ?: "그룹 생성에 실패했습니다")
-                }
+                // TODO: Repository에 createGroup 메서드 추가 후 구현
+                // val result = groupRepository.createGroup(request)
+                
+                // 임시로 성공 처리
+                onSuccess()
+                
+                // if (result.isSuccess) {
+                //     onSuccess()
+                // } else {
+                //     onError(result.message ?: "그룹 생성에 실패했습니다")
+                // }
             } catch (e: Exception) {
                 //onError("네트워크 오류가 발생했습니다: ${e.message}")
             } finally {
@@ -104,36 +107,5 @@ class GroupMakeRoomViewModel(
     // 에러 메시지 클리어
     fun clearError() {
         _uiState.value = _uiState.value.copy(errorMessage = null)
-    }
-}
-
-// Repository 예시
-interface GroupRepository {
-    suspend fun createGroup(request: GroupMakeRoomRequest): ApiResult<GroupCreateResponse>
-}
-
-// API 응답 클래스 예시
-data class ApiResult<T>(
-    val isSuccess: Boolean,
-    val data: T? = null,
-    val message: String? = null
-)
-
-data class GroupCreateResponse(
-    val groupId: String,
-    val groupName: String
-)
-
-// Mock Repository 구현
-class MockGroupRepository : GroupRepository {
-    override suspend fun createGroup(request: GroupMakeRoomRequest): ApiResult<GroupCreateResponse> {
-        // 임시로 성공 응답 반환
-        return ApiResult(
-            isSuccess = true,
-            data = GroupCreateResponse(
-                groupId = "mock_group_${System.currentTimeMillis()}",
-                groupName = request.roomTitle
-            )
-        )
     }
 }
