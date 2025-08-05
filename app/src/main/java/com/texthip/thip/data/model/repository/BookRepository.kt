@@ -1,7 +1,7 @@
 package com.texthip.thip.data.model.repository
 
 import com.texthip.thip.data.model.base.handleBaseResponse
-import com.texthip.thip.data.model.book.response.BookDto
+import com.texthip.thip.data.model.book.response.BookSavedResponse
 import com.texthip.thip.data.model.book.response.BookSearchData
 import com.texthip.thip.data.model.service.BookService
 import javax.inject.Inject
@@ -13,7 +13,7 @@ class BookRepository @Inject constructor(
 ) {
 
     // 저장된/모임 책 조회 API 연동
-    suspend fun getBooks(type: String): Result<List<BookDto>> {
+    suspend fun getBooks(type: String): Result<List<BookSavedResponse>> {
         return try {
             bookService.getBooks(type)
                 .handleBaseResponse()

@@ -3,7 +3,7 @@ package com.texthip.thip.data.model.book.response
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BookDto(
+data class BookSavedResponse(
     val isbn: String,
     val bookTitle: String,
     val authorName: String,
@@ -13,5 +13,5 @@ data class BookDto(
 
 @Serializable
 data class BookListResponse(
-    val bookList: List<BookDto>
+    val bookList: List<BookSavedResponse>
 )
