@@ -3,8 +3,9 @@ package com.texthip.thip.ui.group.makeroom.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.texthip.thip.data.model.repository.GroupRepository
-import com.texthip.thip.data.model.book.response.BookDto
+import com.texthip.thip.data.model.book.response.BookSavedResponse
 import com.texthip.thip.data.model.group.request.CreateRoomRequest
+import com.texthip.thip.data.model.repository.BookRepository
 import com.texthip.thip.ui.group.makeroom.mock.BookData
 import com.texthip.thip.ui.group.makeroom.mock.GroupMakeRoomUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GroupMakeRoomViewModel @Inject constructor(
-    private val groupRepository: GroupRepository
+    private val groupRepository: GroupRepository,
+    private val bookRepository: BookRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(GroupMakeRoomUiState())
@@ -55,7 +57,7 @@ class GroupMakeRoomViewModel @Inject constructor(
             _isLoadingBooks.value = true
             try {
                 // 저장한 책 로드
-                val savedBooksResult = groupRepository.getBooks("saved")
+                val savedBooksResult = bookRepository.getBooks("saved")
                 savedBooksResult.onSuccess { bookDtos ->
                     _savedBooks.value = bookDtos.map { it.toBookData() }
                 }.onFailure {
@@ -63,7 +65,7 @@ class GroupMakeRoomViewModel @Inject constructor(
                 }
                 
                 // 모임 책 로드
-                val groupBooksResult = groupRepository.getBooks("joining")
+                val groupBooksResult = bookRepository.getBooks("joining")
                 groupBooksResult.onSuccess { bookDtos ->
                     _groupBooks.value = bookDtos.map { it.toBookData() }
                 }.onFailure {
@@ -79,7 +81,7 @@ class GroupMakeRoomViewModel @Inject constructor(
     }
     
     // BookDto를 BookData로 변환
-    private fun BookDto.toBookData(): BookData {
+    private fun BookSavedResponse.toBookData(): BookData {
         return BookData(
             title = this.bookTitle,
             imageUrl = this.imageUrl,
