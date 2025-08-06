@@ -34,16 +34,16 @@ fun GenreChipButton(
 ) {
     Box(
         modifier = modifier
+            .clickable {
+                onClick()
+            }
             .border(
                 width = 1.dp,
                 color = colors.Grey02,
                 shape = RoundedCornerShape(20.dp)
             )
             .background(color = Color.Transparent, shape = RoundedCornerShape(12.dp))
-            .padding(top = 8.dp, bottom = 8.dp, end = 8.dp, start = 12.dp)
-            .clickable {
-                onClick()
-            },
+            .padding(top = 8.dp, bottom = 8.dp, end = 8.dp, start = 12.dp),
         contentAlignment = Alignment.Center,
     ) {
         Row(

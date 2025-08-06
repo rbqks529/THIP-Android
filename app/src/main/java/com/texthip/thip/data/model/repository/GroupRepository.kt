@@ -22,7 +22,7 @@ import javax.inject.Singleton
 @Singleton
 class GroupRepository @Inject constructor(
     private val groupService: GroupService,
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) {
     private val genres = listOf(
         context.getString(R.string.literature),
