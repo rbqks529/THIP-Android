@@ -2,6 +2,7 @@ package com.texthip.thip.ui.group.makeroom.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.texthip.thip.data.model.book.response.BookSavedResponse
 import com.texthip.thip.data.model.repository.GroupRepository
 import com.texthip.thip.data.model.book.response.BookSavedResponse
 import com.texthip.thip.data.model.group.request.CreateRoomRequest
@@ -80,7 +81,6 @@ class GroupMakeRoomViewModel @Inject constructor(
         }
     }
     
-    // BookDto를 BookData로 변환
     private fun BookSavedResponse.toBookData(): BookData {
         return BookData(
             title = this.bookTitle,

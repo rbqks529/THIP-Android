@@ -1,6 +1,7 @@
 package com.texthip.thip.data.model.repository
 
 import com.texthip.thip.data.model.base.handleBaseResponse
+import com.texthip.thip.data.model.book.response.BookSavedResponse
 import com.texthip.thip.data.model.book.response.BookDetail
 import com.texthip.thip.data.model.book.response.BookSavedResponse
 import com.texthip.thip.data.model.book.response.BookSearchData
@@ -65,4 +66,5 @@ class BookRepository @Inject constructor(
             Result.failure(e)
         }
     }
+
 }

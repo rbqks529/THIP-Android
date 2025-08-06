@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class JoinedRoomsDto(
-    @SerialName("roomList") val roomList: List<JoinedRoomDto>,
+data class JoinedRoomListResponse(
+    @SerialName("roomList") val roomList: List<JoinedRoomResponse>,
     @SerialName("nickname") val nickname: String,
     @SerialName("page") val page: Int,
     @SerialName("size") val size: Int,
@@ -15,7 +15,7 @@ data class JoinedRoomsDto(
 )
 
 @Serializable
-data class JoinedRoomDto(
+data class JoinedRoomResponse(
     @SerialName("roomId") val roomId: Int,
     @SerialName("bookImageUrl") val bookImageUrl: String?,
     @SerialName("bookTitle") val bookTitle: String,

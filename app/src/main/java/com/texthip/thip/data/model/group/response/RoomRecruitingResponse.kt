@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RoomRecruitingDto(
+data class RoomRecruitingResponse(
     @SerialName("isHost") val isHost: Boolean,
     @SerialName("isJoining") val isJoining: Boolean,
     @SerialName("roomId") val roomId: Int,
@@ -23,11 +23,11 @@ data class RoomRecruitingDto(
     @SerialName("bookTitle") val bookTitle: String,
     @SerialName("authorName") val authorName: String,
     @SerialName("bookDescription") val bookDescription: String,
-    @SerialName("recommandRooms") val recommendRooms: List<RecommendRoomDto>
+    @SerialName("recommendRooms") val recommendRooms: List<RecommendRoomResponse>
 )
 
 @Serializable
-data class RecommendRoomDto(
+data class RecommendRoomResponse(
     @SerialName("roomImageUrl") val roomImageUrl: String?,
     @SerialName("roomName") val roomName: String,
     @SerialName("memberCount") val memberCount: Int,

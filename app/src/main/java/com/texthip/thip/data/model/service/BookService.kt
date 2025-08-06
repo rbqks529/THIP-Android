@@ -1,6 +1,8 @@
 package com.texthip.thip.data.model.service
 
 import com.texthip.thip.data.model.base.BaseResponse
+import com.texthip.thip.data.model.book.response.BookListResponse
+import retrofit2.http.GET
 import com.texthip.thip.data.model.book.response.BookDetail
 import com.texthip.thip.data.model.book.response.BookListResponse
 import com.texthip.thip.data.model.book.response.BookSearchData

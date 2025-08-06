@@ -1,7 +1,5 @@
 package com.texthip.thip.ui.group.makeroom.mock
 
-import com.texthip.thip.R
-
 data class BookData(
     val title: String,
     val imageUrl: String? = null, // 이미지 URL

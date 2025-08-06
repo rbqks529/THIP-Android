@@ -5,7 +5,7 @@ import com.texthip.thip.R
 import com.texthip.thip.data.model.base.handleBaseResponse
 import com.texthip.thip.data.model.group.request.CreateRoomRequest
 import com.texthip.thip.data.model.group.response.PaginationResult
-import com.texthip.thip.data.model.group.response.RoomListDto
+import com.texthip.thip.data.model.group.response.RoomMainResponse
 import com.texthip.thip.data.model.service.GroupService
 import com.texthip.thip.ui.group.done.mock.MyRoomCardData
 import com.texthip.thip.ui.group.done.mock.MyRoomsPaginationResult
@@ -152,7 +152,7 @@ class GroupRepository @Inject constructor(
         }
     }
     
-    private fun convertToGroupCardItemRoomData(dto: RoomListDto, daysLeft: Int): GroupCardItemRoomData {
+    private fun convertToGroupCardItemRoomData(dto: RoomMainResponse, daysLeft: Int): GroupCardItemRoomData {
         return GroupCardItemRoomData(
             id = dto.roomId,
             title = dto.roomName,
@@ -254,7 +254,6 @@ class GroupRepository @Inject constructor(
             else -> GroupBottomButtonType.JOIN // 참여하지 않았으면 참여 가능
         }
     }
-
 
     // 모임방 생성 API 연동
     suspend fun createRoom(request: CreateRoomRequest): Result<Int> {

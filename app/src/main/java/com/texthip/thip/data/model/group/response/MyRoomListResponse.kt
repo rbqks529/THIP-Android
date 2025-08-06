@@ -4,14 +4,14 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MyRoomsDto(
-    @SerialName("roomList") val roomList: List<MyRoomDto>,
+data class MyRoomListResponse(
+    @SerialName("roomList") val roomList: List<MyRoomResponse>,
     @SerialName("nextCursor") val nextCursor: String?,
     @SerialName("isLast") val isLast: Boolean
 )
 
 @Serializable
-data class MyRoomDto(
+data class MyRoomResponse(
     @SerialName("roomId") val roomId: Int,
     @SerialName("bookImageUrl") val bookImageUrl: String,
     @SerialName("bookTitle") val bookTitle: String,

@@ -18,7 +18,7 @@ object ServiceModule {
     fun provideGroupService(retrofit: Retrofit): GroupService {
         return retrofit.create(GroupService::class.java)
     }
-    
+
     @Provides
     @Singleton
     fun provideBookService(retrofit: Retrofit): BookService {

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class RoomListDto(
+data class RoomMainResponse(
     @SerialName("roomId") val roomId: Int,
     @SerialName("bookImageUrl") val bookImageUrl: String?,
     @SerialName("roomName") val roomName: String,
@@ -15,7 +15,7 @@ data class RoomListDto(
 )
 
 @Serializable
-data class RoomsHomeDto(
-    @SerialName("deadlineRoomList") val deadlineRoomList: List<RoomListDto> = emptyList(),
-    @SerialName("popularRoomList") val popularRoomList: List<RoomListDto> = emptyList()
+data class RoomMainList(
+    @SerialName("deadlineRoomList") val deadlineRoomList: List<RoomMainResponse> = emptyList(),
+    @SerialName("popularRoomList") val popularRoomList: List<RoomMainResponse> = emptyList()
 )
