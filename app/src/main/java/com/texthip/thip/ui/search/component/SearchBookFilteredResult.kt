@@ -10,8 +10,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -27,7 +31,11 @@ import com.texthip.thip.ui.theme.ThipTheme.typography
 @Composable
 fun SearchBookFilteredResult(
     resultCount: Int,
-    bookList: List<BookData>
+    bookList: List<BookData>,
+    hasMoreResults: Boolean = false,
+    onRequestBook: () -> Unit = {},
+    onLoadMore: () -> Unit = {},
+    onBookClick: (BookData) -> Unit = {}
 ) {
     Column {
         Row(
@@ -52,10 +60,29 @@ fun SearchBookFilteredResult(
             SearchEmptyResult(
                 mainText = stringResource(R.string.book_no_search_result1),
                 subText = stringResource(R.string.book_no_search_result2),
-                onRequestBook = { /*책 요청 처리*/ }
+                onRequestBook = onRequestBook
             )
         } else {
+            val listState = rememberLazyListState()
+            
+            // 스크롤 끝에 도달했을 때 더 로드
+            val shouldLoadMore = remember(bookList.size, hasMoreResults) {
+                derivedStateOf {
+                    if (!hasMoreResults || bookList.isEmpty()) return@derivedStateOf false
+                    val layoutInfo = listState.layoutInfo
+                    val lastVisibleIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
+                    lastVisibleIndex >= bookList.size - 3
+                }
+            }
+            
+            LaunchedEffect(shouldLoadMore.value) {
+                if (shouldLoadMore.value) {
+                    onLoadMore()
+                }
+            }
+            
             LazyColumn(
+                state = listState,
                 verticalArrangement = Arrangement.Center
             ) {
                 itemsIndexed(bookList) { index, book ->
@@ -63,7 +90,8 @@ fun SearchBookFilteredResult(
                         title = book.title,
                         author = book.author,
                         publisher = book.publisher,
-                        imageUrl = book.imageUrl
+                        imageUrl = book.imageUrl,
+                        onClick = { onBookClick(book) }
                     )
                     if (index < bookList.size - 1) {
                         Spacer(

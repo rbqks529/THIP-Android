@@ -19,7 +19,10 @@ import com.texthip.thip.ui.theme.ThipTheme.colors
 import com.texthip.thip.ui.theme.ThipTheme.typography
 
 @Composable
-fun RegisterBookScreen(modifier: Modifier = Modifier) {
+fun RegisterBookScreen(
+    modifier: Modifier = Modifier,
+    onNavigateBack: () -> Unit
+) {
     Column(
         modifier = modifier
             .fillMaxSize(),
@@ -28,7 +31,7 @@ fun RegisterBookScreen(modifier: Modifier = Modifier) {
     ) {
         DefaultTopAppBar(
             title = stringResource(R.string.group_request_book),
-            onLeftClick = {},
+            onLeftClick = onNavigateBack,
         )
         Column (
             modifier = Modifier
@@ -61,6 +64,6 @@ fun RegisterBookScreen(modifier: Modifier = Modifier) {
 @Composable
 private fun GroupRegisterBookPreview() {
     ThipTheme {
-        RegisterBookScreen()
+        RegisterBookScreen(){}
     }
 }

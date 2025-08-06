@@ -1,7 +1,6 @@
 package com.texthip.thip.ui.search.screen
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -20,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -36,8 +36,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.texthip.thip.R
-import com.texthip.thip.ui.search.mock.DetailBookData
+import com.texthip.thip.ui.search.viewmodel.SearchBookDetailViewModel
 import com.texthip.thip.ui.common.buttons.ActionMediumButton
 import com.texthip.thip.ui.common.buttons.FilterButton
 import com.texthip.thip.ui.common.modal.InfoPopup
@@ -51,24 +53,38 @@ import kotlinx.coroutines.delay
 @Composable
 fun SearchBookDetailScreen(
     modifier: Modifier = Modifier,
-    book: DetailBookData,
+    isbn: String,
     feedList: List<String> = emptyList(),
-    onLeftClick: () -> Unit = {},
-    onRightClick: () -> Unit = {},
+    onNavigateBack: () -> Unit = {},
     onRecruitingGroupClick: () -> Unit = {},
     onBookMarkClick: (Boolean) -> Unit = {},
-    onWriteFeedClick: () -> Unit = {}
+    onWriteFeedClick: () -> Unit = {},
+    viewModel: SearchBookDetailViewModel = hiltViewModel()
 ) {
+    // ViewModel states
+    val bookDetail by viewModel.bookDetail.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
+
     var isAlarmVisible by remember { mutableStateOf(true) }
     var isIntroductionPopupVisible by remember { mutableStateOf(false) }
     var isBookmarked by remember { mutableStateOf(false) }
     var selectedFilterOption by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(isbn) {
+        viewModel.loadBookDetail(isbn)
+    }
 
     val filterOptions = listOf(
         stringResource(R.string.search_filter_popular),
         stringResource(R.string.search_filter_latest)
     )
 
+    LaunchedEffect(bookDetail) {
+        bookDetail?.let {
+            isBookmarked = it.isSaved
+        }
+    }
+    
     // 알림 5초간 노출
     LaunchedEffect(Unit) {
         isAlarmVisible = true
@@ -77,6 +93,23 @@ fun SearchBookDetailScreen(
     }
 
     Box(modifier = modifier.fillMaxSize()) {
+        if (bookDetail == null) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                val currentErrorMessage = errorMessage
+                if (currentErrorMessage != null) {
+                    Text(
+                        text = currentErrorMessage,
+                        color = colors.White,
+                        style = typography.smalltitle_sb600_s18_h24
+                    )
+                }
+            }
+            return
+        }
+        
         // 메인 컨텐츠
         Box(
             modifier = Modifier
@@ -89,12 +122,12 @@ fun SearchBookDetailScreen(
                     }
                 )
         ) {
-            if (book.coverImageRes != null) {
+            if (bookDetail?.imageUrl?.isNotEmpty() == true) {
                 Box(modifier = Modifier
                     .height(420.dp)
                     .fillMaxWidth()) {
-                    Image(
-                        painter = painterResource(book.coverImageRes),
+                    AsyncImage(
+                        model = bookDetail?.imageUrl,
                         contentDescription = null,
                         modifier = Modifier
                             .matchParentSize()
@@ -125,7 +158,7 @@ fun SearchBookDetailScreen(
                 AnimatedVisibility(visible = isAlarmVisible) {
                     GradationTopAppBar(
                         isImageVisible = true,
-                        count = book.participantsCount,
+                        count = bookDetail?.recruitingReadCount ?: 0,
                         onLeftClick = {},
                         onRightClick = {}
                     )
@@ -134,8 +167,8 @@ fun SearchBookDetailScreen(
                     DefaultTopAppBar(
                         isRightIconVisible = true,
                         isTitleVisible = false,
-                        onLeftClick = onLeftClick,
-                        onRightClick = onRightClick
+                        onLeftClick = onNavigateBack,
+                        onRightClick = onNavigateBack
                     )
                 }
 
@@ -147,7 +180,7 @@ fun SearchBookDetailScreen(
                 ) {
                     Text(
                         modifier = Modifier.padding(top = 40.dp),
-                        text = book.title,
+                        text = bookDetail?.title ?: "",
                         color = colors.White,
                         style = typography.bigtitle_b700_s22
                     )
@@ -156,8 +189,8 @@ fun SearchBookDetailScreen(
                     Text(
                         text = stringResource(
                             R.string.search_book_author,
-                            book.author,
-                            book.publisher
+                            bookDetail?.authorName ?: "",
+                            bookDetail?.publisher ?: ""
                         ),
                         color = colors.Grey,
                         style = typography.menu_sb600_s12_h20
@@ -177,7 +210,7 @@ fun SearchBookDetailScreen(
                         Spacer(modifier = Modifier.height(5.dp))
 
                         Text(
-                            text = book.description,
+                            text = bookDetail?.description ?: "",
                             color = colors.Grey,
                             style = typography.copy_r400_s12_h20,
                             maxLines = 2,
@@ -193,7 +226,7 @@ fun SearchBookDetailScreen(
                         ActionMediumButton(
                             text = stringResource(
                                 R.string.search_recruiting_group_count,
-                                book.recruitingRoomCount
+                                bookDetail?.recruitingRoomCount ?: 0
                             ),
                             contentColor = colors.Grey,
                             backgroundColor = Color.Transparent,
@@ -313,7 +346,7 @@ fun SearchBookDetailScreen(
             ) {
                 InfoPopup(
                     title = stringResource(R.string.introduction),
-                    content = book.description,
+                    content = bookDetail?.description ?: "",
                     onDismiss = { isIntroductionPopupVisible = false }
                 )
             }
@@ -326,18 +359,7 @@ fun SearchBookDetailScreen(
 fun PreviewBookDetailScreen() {
     ThipTheme {
         SearchBookDetailScreen(
-            book = DetailBookData(
-                title = "채식주의자",
-                author = "한강",
-                publisher = "창비",
-                description =
-                    "인터내셔널 북커상, 산클레멘테 문학상 수상작. 전세계가 주목한 인간의 역작을 다시 만나다.2016년 인터내셔널 북커상을 수상하며 한국문학의 입지를 한단계 확장시킨 한강의 명단소설 『채식주의자』. 15년 만에 새로운 장정과 판형으로 출간된다. 식물화로 건설해온 극단적이며 실재적인 상상력의 강렬한 결실로 고통과 구속의 피안에 존재하는 인간의 본성에 다가간 작품." +
-                            "인터내셔널 북커상, 산클레멘테 문학상 수상작. 전세계가 주목한 인간의 역작을 다시 만나다. \n\n2016년 인터내셔널 북커상을 수상하며 한국문학의 입지를 한단계 확장시킨 한강의 명단소설 『채식주의자』. 15년 만에 새로운 장정과 판형으로 출간된다. 식물화로 건설해온 극단적이며 실재적인 상상력의 강렬한 결실로 고통과 구속의 피안에 존재하는 인간의 본성에 다가간 작품.",
-                coverImageRes = R.drawable.bookcover_sample,
-                participantsCount = 210,
-                recruitingRoomCount = 4
-            ),
-            feedList = emptyList()
+            isbn = "9788954682152"
         )
     }
 }
