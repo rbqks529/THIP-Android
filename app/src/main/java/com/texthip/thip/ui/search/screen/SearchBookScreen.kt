@@ -48,6 +48,7 @@ import java.util.Locale
 fun SearchBookScreen(
     modifier: Modifier = Modifier,
     onNavigateToRegisterBook: () -> Unit = {},
+    onNavigateToBookDetail: (String) -> Unit = {},
     viewModel: SearchBookViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -182,7 +183,7 @@ fun SearchBookScreen(
                                 viewModel.removeRecentSearch(keyword)
                             },
                             onBookClick = { book ->
-                                // 책 클릭 시 처리
+                                onNavigateToBookDetail(book.isbn)
                             }
                         )
                     }
@@ -207,7 +208,8 @@ fun SearchBookScreen(
                                     )
                                 },
                                 hasMoreResults = hasMoreResults,
-                                onLoadMore = { viewModel.loadMoreResults() }
+                                onLoadMore = { viewModel.loadMoreResults() },
+                                onBookClick = { book -> onNavigateToBookDetail(book.isbn) }
                             )
                         }
                     }
@@ -226,7 +228,8 @@ fun SearchBookScreen(
                             },
                             hasMoreResults = hasMoreResults,
                             onRequestBook = onNavigateToRegisterBook,
-                            onLoadMore = { viewModel.loadMoreResults() }
+                            onLoadMore = { viewModel.loadMoreResults() },
+                            onBookClick = { book -> onNavigateToBookDetail(book.isbn) }
                         )
                     }
                 }

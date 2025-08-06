@@ -24,7 +24,8 @@ import com.texthip.thip.ui.theme.ThipTheme.colors
 fun SearchActiveField(
     bookList: List<BookData>,
     hasMoreResults: Boolean = false,
-    onLoadMore: () -> Unit = {}
+    onLoadMore: () -> Unit = {},
+    onBookClick: (BookData) -> Unit = {}
 ) {
     val listState = rememberLazyListState()
     
@@ -53,7 +54,8 @@ fun SearchActiveField(
                 title = book.title,
                 author = book.author,
                 publisher = book.publisher,
-                imageUrl = book.imageUrl
+                imageUrl = book.imageUrl,
+                onClick = { onBookClick(book) }
             )
             if (index < bookList.size - 1) {
                 Spacer(

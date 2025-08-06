@@ -34,7 +34,8 @@ fun SearchBookFilteredResult(
     bookList: List<BookData>,
     hasMoreResults: Boolean = false,
     onRequestBook: () -> Unit = {},
-    onLoadMore: () -> Unit = {}
+    onLoadMore: () -> Unit = {},
+    onBookClick: (BookData) -> Unit = {}
 ) {
     Column {
         Row(
@@ -89,7 +90,8 @@ fun SearchBookFilteredResult(
                         title = book.title,
                         author = book.author,
                         publisher = book.publisher,
-                        imageUrl = book.imageUrl
+                        imageUrl = book.imageUrl,
+                        onClick = { onBookClick(book) }
                     )
                     if (index < bookList.size - 1) {
                         Spacer(
