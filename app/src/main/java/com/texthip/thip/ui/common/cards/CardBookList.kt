@@ -1,6 +1,7 @@
 package com.texthip.thip.ui.common.cards
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,11 +35,13 @@ fun CardBookList(
     author: String,
     publisher: String,
     imageUrl: String? = null, // API에서 받은 이미지 URL
+    onClick: () -> Unit = {},
     isBookmarked: Boolean = false,
     onBookmarkClick: () -> Unit = {}
 ) {
     Row(
         modifier = modifier
+            .clickable { onClick() }
             .fillMaxWidth()
             .background(Color.Transparent),
     ) {
