@@ -189,20 +189,7 @@ fun SearchBookScreen(
 
                     searchText.isNotBlank() && !isSearched -> {
                         // 실시간 검색 결과 표시
-                        if (isBookSearching) {
-                            // 로딩 상태 표시 (기존 컴포넌트 활용)
-                            SearchActiveField(
-                                bookList = bookSearchResults.map { 
-                                    BookData(
-                                        title = it.title,
-                                        author = it.authorName,
-                                        publisher = it.publisher,
-                                        imageUrl = it.imageUrl,
-                                        isbn = it.isbn
-                                    )
-                                }
-                            )
-                        } else if (bookSearchResults.isEmpty() && searchText.isNotBlank()) {
+                        if (bookSearchResults.isEmpty() && searchText.isNotBlank()) {
                             SearchEmptyResult(
                                 mainText = stringResource(R.string.book_no_search_result1),
                                 subText = stringResource(R.string.book_no_search_result2),
@@ -218,7 +205,9 @@ fun SearchBookScreen(
                                         imageUrl = it.imageUrl,
                                         isbn = it.isbn
                                     )
-                                }
+                                },
+                                hasMoreResults = hasMoreResults,
+                                onLoadMore = { viewModel.loadMoreResults() }
                             )
                         }
                     }
@@ -235,7 +224,9 @@ fun SearchBookScreen(
                                     isbn = it.isbn
                                 )
                             },
-                            onRequestBook = onNavigateToRegisterBook
+                            hasMoreResults = hasMoreResults,
+                            onRequestBook = onNavigateToRegisterBook,
+                            onLoadMore = { viewModel.loadMoreResults() }
                         )
                     }
                 }
