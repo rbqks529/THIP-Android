@@ -47,6 +47,7 @@ import java.util.Locale
 @Composable
 fun SearchBookScreen(
     modifier: Modifier = Modifier,
+    onNavigateToRegisterBook: () -> Unit = {},
     viewModel: SearchBookViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -203,7 +204,7 @@ fun SearchBookScreen(
                             SearchEmptyResult(
                                 mainText = stringResource(R.string.book_no_search_result1),
                                 subText = stringResource(R.string.book_no_search_result2),
-                                onRequestBook = { /*책 요청 처리*/ }
+                                onRequestBook = onNavigateToRegisterBook
                             )
                         } else {
                             SearchActiveField(
@@ -229,7 +230,8 @@ fun SearchBookScreen(
                                     publisher = it.publisher,
                                     imageUrl = it.imageUrl
                                 )
-                            }
+                            },
+                            onRequestBook = onNavigateToRegisterBook
                         )
                     }
                 }

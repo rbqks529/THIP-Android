@@ -27,7 +27,8 @@ import com.texthip.thip.ui.theme.ThipTheme.typography
 @Composable
 fun SearchBookFilteredResult(
     resultCount: Int,
-    bookList: List<BookData>
+    bookList: List<BookData>,
+    onRequestBook: () -> Unit = {}
 ) {
     Column {
         Row(
@@ -52,7 +53,7 @@ fun SearchBookFilteredResult(
             SearchEmptyResult(
                 mainText = stringResource(R.string.book_no_search_result1),
                 subText = stringResource(R.string.book_no_search_result2),
-                onRequestBook = { /*책 요청 처리*/ }
+                onRequestBook = onRequestBook
             )
         } else {
             LazyColumn(

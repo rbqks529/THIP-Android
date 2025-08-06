@@ -3,6 +3,7 @@ package com.texthip.thip.ui.navigator.extensions
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import com.texthip.thip.ui.navigator.routes.MainTabRoutes
+import com.texthip.thip.ui.navigator.routes.CommonRoutes
 
 
 // 공통 네비게이션 확장 함수들
@@ -33,6 +34,11 @@ fun NavDestination.isMainTabRoute(): Boolean {
 // 매인 루트인지 확인
 fun NavDestination.isRoute(targetRoute: MainTabRoutes): Boolean {
     return route == targetRoute::class.qualifiedName
+}
+
+// RegisterBookScreen으로 네비게이션하는 확장 함수
+fun NavHostController.navigateToRegisterBook() {
+    navigate(CommonRoutes.RegisterBook)
 }
 
 
