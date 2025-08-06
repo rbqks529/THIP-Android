@@ -1,5 +1,6 @@
 package com.texthip.thip.data.di
 
+import com.texthip.thip.data.model.service.BookService
 import com.texthip.thip.data.model.service.GroupService
 import dagger.Module
 import dagger.Provides
@@ -16,5 +17,11 @@ object ServiceModule {
     @Singleton
     fun provideGroupService(retrofit: Retrofit): GroupService {
         return retrofit.create(GroupService::class.java)
+    }
+    
+    @Provides
+    @Singleton
+    fun provideBookService(retrofit: Retrofit): BookService {
+        return retrofit.create(BookService::class.java)
     }
 }
