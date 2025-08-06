@@ -1,6 +1,7 @@
 package com.texthip.thip.data.model.repository
 
 import com.texthip.thip.data.model.base.handleBaseResponse
+import com.texthip.thip.data.model.book.response.BookDetail
 import com.texthip.thip.data.model.book.response.BookSavedResponse
 import com.texthip.thip.data.model.book.response.BookSearchData
 import com.texthip.thip.data.model.book.response.MostSearchedBook
@@ -46,6 +47,19 @@ class BookRepository @Inject constructor(
                 .handleBaseResponse()
                 .mapCatching { mostSearchedBooks ->
                     mostSearchedBooks ?: emptyList()
+                }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    // 책 상세 정보 조회 API 연동
+    suspend fun getBookDetail(isbn: String): Result<BookDetail> {
+        return try {
+            bookService.getBookDetail(isbn)
+                .handleBaseResponse()
+                .mapCatching { bookDetail ->
+                    bookDetail ?: throw Exception("책 정보를 찾을 수 없습니다")
                 }
         } catch (e: Exception) {
             Result.failure(e)
