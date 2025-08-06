@@ -109,7 +109,7 @@ fun SearchBookScreen(
     // 실시간 검색 (debounced)
     LaunchedEffect(searchText) {
         if (searchText.isNotBlank() && !isSearched) {
-            delay(300) // 300ms 딜레이
+            delay(200) // 200ms 딜레이
             if (searchText.isNotBlank()) {
                 viewModel.searchBooks(searchText, isNewSearch = true)
             }
@@ -168,7 +168,8 @@ fun SearchBookScreen(
                                 BookData(
                                     title = it.title,
                                     publisher = "",
-                                    imageUrl = it.imageUrl
+                                    imageUrl = it.imageUrl,
+                                    isbn = it.isbn
                                 )
                             },
                             popularBookDate = currentDate,
@@ -196,7 +197,8 @@ fun SearchBookScreen(
                                         title = it.title,
                                         author = it.authorName,
                                         publisher = it.publisher,
-                                        imageUrl = it.imageUrl
+                                        imageUrl = it.imageUrl,
+                                        isbn = it.isbn
                                     )
                                 }
                             )
@@ -213,7 +215,8 @@ fun SearchBookScreen(
                                         title = it.title,
                                         author = it.authorName,
                                         publisher = it.publisher,
-                                        imageUrl = it.imageUrl
+                                        imageUrl = it.imageUrl,
+                                        isbn = it.isbn
                                     )
                                 }
                             )
@@ -228,7 +231,8 @@ fun SearchBookScreen(
                                     title = it.title,
                                     author = it.authorName,
                                     publisher = it.publisher,
-                                    imageUrl = it.imageUrl
+                                    imageUrl = it.imageUrl,
+                                    isbn = it.isbn
                                 )
                             },
                             onRequestBook = onNavigateToRegisterBook
