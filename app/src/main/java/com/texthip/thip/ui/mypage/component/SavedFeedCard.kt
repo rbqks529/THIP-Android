@@ -166,7 +166,7 @@ private fun SavedFeedCardPrev() {
         commentCount = 5,
         isLiked = false,
         isSaved = true,
-        imageUrls = listOf(R.drawable.img_book_cover_sample,R.drawable.img_book_cover_sample,R.drawable.bookcover_sample)
+        imageUrls = listOf(R.drawable.img_book_cover_sample,R.drawable.img_book_cover_sample,R.drawable.img_book_cover_sample)
     )
     val scrollState = rememberScrollState()
 

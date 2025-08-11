@@ -149,7 +149,7 @@ private fun MyFeedCardPrev() {
         isLiked = false,
         isSaved = true,
         isLocked = false,
-        imageUrls = listOf(R.drawable.bookcover_sample,R.drawable.bookcover_sample)
+        imageUrls = listOf(R.drawable.img_book_cover_sample, R.drawable.img_book_cover_sample)
     )
 
     Column {

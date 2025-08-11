@@ -267,7 +267,7 @@ private fun FeedScreenPreview() {
                 isLiked = false,
                 isSaved = false,
                 isLocked = it % 2 == 0,
-                imageUrls = listOf(R.drawable.bookcover_sample)
+                imageUrls = listOf(R.drawable.img_book_cover_sample)
             )
         }
         val mockFollowerImages = listOf(
