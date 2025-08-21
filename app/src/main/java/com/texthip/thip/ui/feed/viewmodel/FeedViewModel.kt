@@ -201,7 +201,7 @@ class FeedViewModel @Inject constructor(
     fun pullToRefresh() {
         viewModelScope.launch {
             updateState { it.copy(isPullToRefreshing = true) }
-
+            fetchRecentWriters()
             when (_uiState.value.selectedTabIndex) {
                 0 -> refreshAllFeeds()
                 1 -> refreshMyFeeds()
@@ -287,7 +287,7 @@ class FeedViewModel @Inject constructor(
         }
     }
 
-    private fun fetchRecentWriters() {
+    fun fetchRecentWriters() {
         viewModelScope.launch {
             updateState { it.copy(isLoading = true) }
             userRepository.getMyFollowingsRecentFeeds()

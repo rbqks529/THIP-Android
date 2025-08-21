@@ -120,6 +120,7 @@ fun FeedScreen(
                     lastVisibleIndex >= totalItems - 3
         }
     }
+
     LaunchedEffect(Unit) {
         navController.currentBackStackEntry?.savedStateHandle?.let { handle ->
             handle.getLiveData<Long>("deleted_feed_id").observeForever { deletedId ->
@@ -144,11 +145,24 @@ fun FeedScreen(
         if (feedUiState.allFeeds.isEmpty() && feedUiState.myFeeds.isEmpty()) {
             feedViewModel.refreshData()
         }
+        
         val hasUpdatedFeedData =
             navController.currentBackStackEntry?.savedStateHandle?.get<Long>("updated_feed_id") != null
+        val fromProfile = 
+            navController.currentBackStackEntry?.savedStateHandle?.get<Boolean>("from_profile") ?: false
 
-        if (!hasUpdatedFeedData) {
+        if (!hasUpdatedFeedData && !fromProfile) {
+            // 일반적인 경우: 전체 새로고침 + 스크롤 상단 이동
+            feedViewModel.refreshData()
             allFeedListState.scrollToItem(0)
+        } else {
+            // 댓글 화면 또는 프로필에서 돌아온 경우: recentWriters만 업데이트
+            feedViewModel.fetchRecentWriters()
+        }
+        
+        // 프로필 플래그 제거
+        if (fromProfile) {
+            navController.currentBackStackEntry?.savedStateHandle?.remove<Boolean>("from_profile")
         }
     }
 
@@ -457,6 +471,8 @@ fun FeedScreen(
                                     onNavigateToBookDetail(allFeed.isbn)
                                 },
                                 onProfileClick = {
+                                    // 프로필에서 돌아올 때를 위한 플래그 설정
+                                    navController.currentBackStackEntry?.savedStateHandle?.set("from_profile", true)
                                     onNavigateToUserProfile(allFeed.creatorId)
                                 }
                             )
