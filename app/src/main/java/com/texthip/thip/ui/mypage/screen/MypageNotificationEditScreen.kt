@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -34,6 +35,9 @@ import com.texthip.thip.ui.common.topappbar.InputTopAppBar
 import com.texthip.thip.ui.theme.ThipTheme.colors
 import com.texthip.thip.ui.theme.ThipTheme.typography
 import kotlinx.coroutines.delay
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun NotificationScreen(
@@ -41,6 +45,7 @@ fun NotificationScreen(
 ) {
     var isChecked by rememberSaveable { mutableStateOf(true) }
     var toastMessage by rememberSaveable { mutableStateOf<String?>(null) }
+    var toastDateTime by rememberSaveable { mutableStateOf("") }
 
     LaunchedEffect(toastMessage) {
         if (toastMessage != null) {
@@ -69,7 +74,7 @@ fun NotificationScreen(
                     message = stringResource(
                         if (message == "push_on") R.string.push_on else R.string.push_off
                     ),
-                    date = "2025년 6월 29일 22시 30분",
+                    date = toastDateTime,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -113,6 +118,9 @@ fun NotificationScreen(
                         onToggleChange = {
                             isChecked = it
                             toastMessage = if (it) "push_on" else "push_off"
+                            // 토글 버튼 클릭 시점의 현재 시간 저장
+                            val dateFormat = SimpleDateFormat("yyyy년 M월 d일 H시 m분", Locale.KOREAN)
+                            toastDateTime = dateFormat.format(Date())
                         }
                     )
                 }

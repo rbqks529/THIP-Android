@@ -19,6 +19,7 @@ class TokenManager @Inject constructor(
         private val APP_TOKEN_KEY = stringPreferencesKey("app_token") // 정식 액세스토큰
         private val TEMP_TOKEN_KEY = stringPreferencesKey("temp_token") // 임시 토큰
         private val REFRESH_TOKEN_KEY = stringPreferencesKey("refresh_token")
+        private val FCM_TOKEN_KEY = stringPreferencesKey("fcm_token") // FCM 토큰
     }
 
     // ====== 정식 토큰 ======
@@ -60,6 +61,15 @@ class TokenManager @Inject constructor(
 
     suspend fun getRefreshTokenOnce(): String? {
         return dataStore.data.map { prefs -> prefs[REFRESH_TOKEN_KEY] }.first()
+    }
+
+    // ====== FCM 토큰 ======
+    suspend fun saveFcmToken(token: String) {
+        dataStore.edit { prefs -> prefs[FCM_TOKEN_KEY] = token }
+    }
+
+    suspend fun getFcmTokenOnce(): String? {
+        return dataStore.data.map { prefs -> prefs[FCM_TOKEN_KEY] }.first()
     }
 
     suspend fun clearTokens() {
