@@ -196,7 +196,7 @@ fun RootNavHost(
             },
             onNavigateToMainAfterSignup = {
                 navController.navigate(CommonRoutes.Main) { // 혹은 MainGraph
-                    popUpTo(CommonRoutes.Splash) { inclusive = true }
+                    popUpTo(CommonRoutes.Login) { inclusive = true }
                 }
             },
             navController = navController
