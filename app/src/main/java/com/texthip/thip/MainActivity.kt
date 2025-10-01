@@ -23,12 +23,16 @@ import com.google.firebase.analytics.analytics
 import com.google.firebase.analytics.logEvent
 import com.texthip.thip.data.manager.AuthStateManager
 import com.texthip.thip.data.manager.TokenManager
+import com.texthip.thip.data.repository.NotificationRepository
 import com.texthip.thip.ui.navigator.navigations.authNavigation
 import com.texthip.thip.ui.navigator.routes.CommonRoutes
 import com.texthip.thip.ui.theme.ThipTheme
 import com.texthip.thip.utils.permission.NotificationPermissionUtils
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -39,9 +43,14 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var authStateManager: AuthStateManager
 
+    @Inject
+    lateinit var notificationRepository: NotificationRepository
+
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) {}
+    ) { isGranted ->
+        handleNotificationPermissionResult(isGranted)
+    }
 
     private var notificationData by mutableStateOf<NotificationData?>(null)
 
@@ -131,6 +140,24 @@ class MainActivity : ComponentActivity() {
         
         // Intent 플래그도 정리
         intent.replaceExtras(intent.extras)
+    }
+
+    private fun handleNotificationPermissionResult(isGranted: Boolean) {
+        if (isGranted) {
+            Log.d("MainActivity", "Notification permission granted")
+        } else {
+            Log.w("MainActivity", "Notification permission denied")
+            // 권한이 거부되면 서버에 알림 비활성화 요청
+            CoroutineScope(Dispatchers.IO).launch {
+                notificationRepository.updateNotificationEnabled(false)
+                    .onSuccess {
+                        Log.d("MainActivity", "Notification disabled on server due to permission denial")
+                    }
+                    .onFailure { exception ->
+                        Log.e("MainActivity", "Failed to disable notification on server: ${exception.message}")
+                    }
+            }
+        }
     }
 
     private fun requestNotificationPermissionIfNeeded() {
