@@ -63,9 +63,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        // 앱 시작 시 알림 권한 요청
-        requestNotificationPermissionIfNeeded()
-
         // 푸시 알림에서 온 데이터 처리
         handleNotificationIntent(intent)
 
@@ -73,7 +70,12 @@ class MainActivity : ComponentActivity() {
             ThipTheme {
                 RootNavHost(
                     authStateManager = authStateManager,
-                    notificationData = notificationData
+                    notificationData = notificationData,
+                    onRequestNotificationPermission = {
+                        if (NotificationPermissionUtils.shouldRequestNotificationPermission(this@MainActivity)) {
+                            NotificationPermissionUtils.requestPermission(notificationPermissionLauncher)
+                        }
+                    }
                 )
             }
         }
@@ -160,17 +162,13 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun requestNotificationPermissionIfNeeded() {
-        if (NotificationPermissionUtils.shouldRequestNotificationPermission(this)) {
-            notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
-        }
-    }
 }
 
 @Composable
 fun RootNavHost(
     authStateManager: AuthStateManager,
-    notificationData: MainActivity.NotificationData? = null
+    notificationData: MainActivity.NotificationData? = null,
+    onRequestNotificationPermission: () -> Unit = {}
 ) {
     val navController = rememberNavController()
     val firebaseAnalytics = Firebase.analytics
@@ -241,7 +239,8 @@ fun RootNavHost(
                         }
                     }
                 },
-                notificationData = notificationData
+                notificationData = notificationData,
+                onRequestNotificationPermission = onRequestNotificationPermission
             )
         }
     }

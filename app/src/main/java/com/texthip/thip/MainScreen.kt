@@ -35,7 +35,8 @@ interface MainScreenEntryPoint {
 @Composable
 fun MainScreen(
     onNavigateToLogin: () -> Unit,
-    notificationData: MainActivity.NotificationData? = null
+    notificationData: MainActivity.NotificationData? = null,
+    onRequestNotificationPermission: () -> Unit = {}
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -45,6 +46,11 @@ fun MainScreen(
     
     // 처리된 알림 ID 추적
     var processedNotificationId by remember { mutableStateOf<String?>(null) }
+    
+    // 메인 화면 처음 진입 시 알림 권한 요청
+    LaunchedEffect(Unit) {
+        onRequestNotificationPermission()
+    }
 
     // 푸시 알림에서 온 경우 알림 읽기 API 호출 및 네비게이션
     LaunchedEffect(notificationData?.notificationId, notificationData?.fromNotification) {
