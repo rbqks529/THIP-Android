@@ -90,7 +90,7 @@ class GroupMakeRoomViewModel @Inject constructor(
     private fun loadBooks() {
         updateState { it.copy(isLoadingBooks = true) }
         loadSavedBooks(isInitial = true)
-        loadGroupBooks(isInitial = true)
+        // 모임 생성 화면에서는 저장된 책만 표시
     }
 
     fun loadSavedBooks(isInitial: Boolean = false) {
@@ -133,11 +133,11 @@ class GroupMakeRoomViewModel @Inject constructor(
                     }
             } finally {
                 isLoadingSavedBooks = false
-                updateState { 
+                updateState {
                     it.copy(
-                        isLoadingBooks = if (isInitial && !isLoadingGroupBooks) false else it.isLoadingBooks,
+                        isLoadingBooks = false,
                         isLoadingMoreSavedBooks = false
-                    ) 
+                    )
                 }
             }
         }

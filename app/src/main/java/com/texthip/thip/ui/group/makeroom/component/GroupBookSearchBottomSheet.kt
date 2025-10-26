@@ -49,16 +49,22 @@ fun GroupBookSearchBottomSheet(
     onSearch: (String) -> Unit = {},
     onLoadMoreSaved: () -> Unit = {},
     onLoadMoreGroup: () -> Unit = {},
-    onLoadMoreSearch: () -> Unit = {}
+    onLoadMoreSearch: () -> Unit = {},
+    showGroupBooksTab: Boolean = true
 ) {
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
-    val tabs = listOf(
-        stringResource(R.string.group_saved_book), stringResource(R.string.group_book)
-    )
+    val tabs = if (showGroupBooksTab) {
+        listOf(
+            stringResource(R.string.group_saved_book),
+            stringResource(R.string.group_book)
+        )
+    } else {
+        listOf(stringResource(R.string.group_saved_book))
+    }
 
     var searchText by rememberSaveable { mutableStateOf("") }
 
-    val currentBooks = if (selectedTab == 0) savedBooks else groupBooks
+    val currentBooks = if (showGroupBooksTab && selectedTab == 1) groupBooks else savedBooks
 
     // 검색어가 있으면 검색 결과 사용, 없으면 탭별 도서 목록 사용
     val displayBooks = if (searchText.isNotEmpty()) {
@@ -120,7 +126,11 @@ fun GroupBookSearchBottomSheet(
                     }
 
                     else -> {
-                        Column(Modifier.padding(horizontal = 20.dp)) {
+                        Column(
+                            Modifier
+                                .weight(1f)
+                                .padding(horizontal = 20.dp)
+                        ) {
                             when {
                                 searchText.isNotEmpty() -> {
                                     GroupBookListWithScrollbar(
@@ -131,7 +141,7 @@ fun GroupBookSearchBottomSheet(
                                         onLoadMore = onLoadMoreSearch
                                     )
                                 }
-                                selectedTab == 0 -> {
+                                !showGroupBooksTab || selectedTab == 0 -> {
                                     GroupBookListWithScrollbar(
                                         books = displayBooks,
                                         onBookClick = onBookSelect,
