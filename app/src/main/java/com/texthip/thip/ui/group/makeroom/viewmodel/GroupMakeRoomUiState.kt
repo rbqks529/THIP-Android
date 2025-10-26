@@ -2,7 +2,6 @@ package com.texthip.thip.ui.group.makeroom.viewmodel
 
 import com.texthip.thip.data.manager.Genre
 import com.texthip.thip.ui.group.makeroom.mock.BookData
-import com.texthip.thip.ui.group.makeroom.mock.GroupMakeRoomRequest
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
@@ -57,18 +56,4 @@ data class GroupMakeRoomUiState(
                 isCountValid &&
                 isPasswordValid
 
-    // 서버 전송용 데이터로 변환
-    fun toRequest(): GroupMakeRoomRequest {
-        return GroupMakeRoomRequest(
-            selectedBook = selectedBook,
-            genreIndex = selectedGenreIndex,
-            roomTitle = roomTitle.trim(),
-            roomDescription = roomDescription.trim(),
-            meetingStartDate = meetingStartDate,
-            meetingEndDate = meetingEndDate,
-            memberLimit = memberLimit,
-            isPrivate = isPrivate,
-            password = if (isPrivate) password else ""
-        )
-    }
 }
