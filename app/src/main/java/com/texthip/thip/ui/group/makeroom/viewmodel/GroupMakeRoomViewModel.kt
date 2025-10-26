@@ -36,9 +36,7 @@ class GroupMakeRoomViewModel @Inject constructor(
     private var searchJob: Job? = null
     private var loadMoreSearchJob: Job? = null
     private var savedBooksCursor: String? = null
-    private var groupBooksCursor: String? = null
     private var isLoadingSavedBooks = false
-    private var isLoadingGroupBooks = false
 
     companion object {
         private val DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd")
@@ -143,62 +141,8 @@ class GroupMakeRoomViewModel @Inject constructor(
         }
     }
 
-    fun loadGroupBooks(isInitial: Boolean = false) {
-        if (isLoadingGroupBooks) return
-        if (!isInitial && _uiState.value.isLastGroupBooks) return
-
-        viewModelScope.launch {
-            try {
-                isLoadingGroupBooks = true
-                
-                if (isInitial) {
-                    updateState { it.copy(groupBooks = emptyList(), isLastGroupBooks = false) }
-                    groupBooksCursor = null
-                } else {
-                    updateState { it.copy(isLoadingMoreGroupBooks = true) }
-                }
-
-                val cursor = if (isInitial) null else groupBooksCursor
-
-                bookRepository.getBooks("JOINING", cursor)
-                    .onSuccess { response ->
-                        if (response != null) {
-                            val currentList = if (isInitial) emptyList() else _uiState.value.groupBooks
-                            val newBooks = response.bookList.map { it.toBookData() }
-                            updateState {
-                                it.copy(
-                                    groupBooks = currentList + newBooks,
-                                    isLastGroupBooks = response.isLast
-                                )
-                            }
-                            groupBooksCursor = response.nextCursor
-                        } else {
-                            updateState { it.copy(isLastGroupBooks = true) }
-                        }
-                    }
-                    .onFailure { exception ->
-                        if (isInitial) {
-                            updateState { it.copy(groupBooks = emptyList()) }
-                        }
-                    }
-            } finally {
-                isLoadingGroupBooks = false
-                updateState { 
-                    it.copy(
-                        isLoadingBooks = if (isInitial && !isLoadingSavedBooks) false else it.isLoadingBooks,
-                        isLoadingMoreGroupBooks = false
-                    ) 
-                }
-            }
-        }
-    }
-
     fun loadMoreSavedBooks() {
         loadSavedBooks(isInitial = false)
-    }
-
-    fun loadMoreGroupBooks() {
-        loadGroupBooks(isInitial = false)
     }
 
     private fun BookSavedResponse.toBookData(): BookData {

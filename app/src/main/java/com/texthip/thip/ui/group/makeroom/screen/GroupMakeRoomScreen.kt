@@ -258,15 +258,15 @@ fun GroupMakeRoomContent(
                     onToggleBookSearchSheet(false)
                 },
                 savedBooks = uiState.savedBooks,
-                groupBooks = uiState.groupBooks,
+                groupBooks = emptyList(),
                 searchResults = uiState.searchResults,
                 isLoading = uiState.isLoadingBooks,
                 isSearching = uiState.isSearching,
                 isLoadingMoreSaved = uiState.isLoadingMoreSavedBooks,
-                isLoadingMoreGroup = uiState.isLoadingMoreGroupBooks,
+                isLoadingMoreGroup = false,
                 isLoadingMoreSearch = uiState.isLoadingMoreSearchResults,
                 hasMoreSaved = !uiState.isLastSavedBooks,
-                hasMoreGroup = !uiState.isLastGroupBooks,
+                hasMoreGroup = false,
                 hasMoreSearch = !uiState.isLastSearchPage,
                 onSearch = onSearchBooks,
                 onLoadMoreSaved = onLoadMoreSavedBooks,
@@ -310,20 +310,6 @@ private fun GroupMakeRoomScreenPreview() {
                         imageUrl = "https://picsum.photos/300/400?3",
                         author = "유발 하라리",
                         isbn = "9788934972464"
-                    )
-                ),
-                groupBooks = listOf(
-                    BookData(
-                        title = "1984",
-                        imageUrl = "https://picsum.photos/300/400?4",
-                        author = "조지 오웰",
-                        isbn = "9788937460777"
-                    ),
-                    BookData(
-                        title = "어린왕자",
-                        imageUrl = "https://picsum.photos/300/400?5",
-                        author = "생텍쥐페리",
-                        isbn = "9788932917245"
                     )
                 )
             )

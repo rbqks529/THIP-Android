@@ -28,6 +28,7 @@ import com.texthip.thip.ui.group.makeroom.mock.BookData
 import com.texthip.thip.ui.group.makeroom.mock.dummyGroupBooks
 import com.texthip.thip.ui.group.makeroom.mock.dummySavedBooks
 import com.texthip.thip.ui.theme.ThipTheme
+import com.texthip.thip.ui.theme.ThipTheme.colors
 import com.texthip.thip.utils.rooms.advancedImePadding
 
 @Composable
@@ -121,7 +122,9 @@ fun GroupBookSearchBottomSheet(
                                 .align(Alignment.CenterHorizontally),
                             contentAlignment = Alignment.Center
                         ) {
-                            CircularProgressIndicator()
+                            CircularProgressIndicator(
+                                color = colors.White
+                            )
                         }
                     }
 
