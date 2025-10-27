@@ -304,6 +304,7 @@
     <string name="group_room_duration_active_comment">%1$d월 %2$d일 자정에 자동으로 모집 마감되고 활동이 가능합니다.</string>
     <string name="group_book_search">검색해서 찾기</string>
     <string name="group_room_duration_initial_comment">모임방 활동이 시작되면, 독서메이트 모집이 자동으로 종료돼요.</string>
+    <string name="group_room_duration_recruitment_period">활동 시작 전 독서메이트 모집 기간 : %d일</string>
     <string name="group_input_count">%1$d / %2$d</string>
 
     <!--    splash screen   -->

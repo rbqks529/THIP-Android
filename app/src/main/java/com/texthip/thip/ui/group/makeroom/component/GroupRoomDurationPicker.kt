@@ -27,6 +27,7 @@ import com.texthip.thip.ui.theme.ThipTheme.colors
 import com.texthip.thip.ui.theme.ThipTheme.typography
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+import kotlinx.coroutines.delay
 
 @Composable
 fun GroupRoomDurationPicker(
@@ -41,6 +42,7 @@ fun GroupRoomDurationPicker(
     var startDate by rememberSaveable { mutableStateOf(tomorrow) }
     var endDate by rememberSaveable { mutableStateOf(tomorrow.plusDays(1)) }
     var isPickerTouched by rememberSaveable { mutableStateOf(false) }
+    var debouncedRecruitmentDays by rememberSaveable { mutableStateOf<Int?>(null) }
 
     // 첫 시작 시에만 모든 날짜를 내일 기준으로 초기화
     LaunchedEffect(Unit) {
@@ -48,6 +50,18 @@ fun GroupRoomDurationPicker(
             startDate = tomorrow
             endDate = tomorrow.plusDays(1)
             isInitialized = true
+            // picker 업데이트 완료 대기 후 상태 리셋
+            delay(100)
+            isPickerTouched = false
+            debouncedRecruitmentDays = null
+        }
+    }
+
+    // 모집 기간 계산 (디바운싱은 1초로 했습니다)
+    LaunchedEffect(startDate, isPickerTouched) {
+        if (isPickerTouched) {
+            delay(1000)
+            debouncedRecruitmentDays = ChronoUnit.DAYS.between(today, startDate).toInt()
         }
     }
 
@@ -143,6 +157,8 @@ fun GroupRoomDurationPicker(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
         ) {
+            val recruitmentDays = debouncedRecruitmentDays
+
             when {
                 isOverLimit -> {
                     Text(
@@ -156,6 +172,18 @@ fun GroupRoomDurationPicker(
                 !isPickerTouched -> {
                     Text(
                         text = stringResource(R.string.group_room_duration_initial_comment),
+                        style = typography.info_r400_s12,
+                        color = colors.NeonGreen,
+                        textAlign = TextAlign.End,
+                        modifier = Modifier.padding(top = 12.dp)
+                    )
+                }
+                isPickerTouched && recruitmentDays != null -> {
+                    Text(
+                        text = stringResource(
+                            R.string.group_room_duration_recruitment_period,
+                            recruitmentDays
+                        ),
                         style = typography.info_r400_s12,
                         color = colors.NeonGreen,
                         textAlign = TextAlign.End,

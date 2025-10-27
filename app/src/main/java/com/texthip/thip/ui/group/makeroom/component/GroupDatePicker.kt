@@ -62,7 +62,8 @@ fun GroupDatePicker(
                     val newDate = try {
                         LocalDate.of(newYear, month, day)
                     } catch (e: Exception) {
-                        LocalDate.of(newYear, month, 1)
+                        val lastDay = LocalDate.of(newYear, month, 1).lengthOfMonth()
+                        LocalDate.of(newYear, month, lastDay)
                     }
                     onDateSelected(newDate)
                 },
@@ -88,7 +89,8 @@ fun GroupDatePicker(
                     val newDate = try {
                         LocalDate.of(year, newMonth, day)
                     } catch (e: Exception) {
-                        LocalDate.of(year, newMonth, 1)
+                        val lastDay = LocalDate.of(year, newMonth, 1).lengthOfMonth()
+                        LocalDate.of(year, newMonth, lastDay)
                     }
                     onDateSelected(newDate)
                 },
