@@ -46,7 +46,7 @@ fun DialogPopup(
             color = colors.White,
             style = typography.smalltitle_m500_s18_h24,
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         Text(
             text = description,
             color = colors.White,
