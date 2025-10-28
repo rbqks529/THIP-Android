@@ -1,5 +1,6 @@
 package com.texthip.thip.ui.group.makeroom.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +33,7 @@ import com.texthip.thip.data.manager.Genre
 import com.texthip.thip.ui.common.buttons.GenreChipRow
 import com.texthip.thip.ui.common.buttons.ToggleSwitchButton
 import com.texthip.thip.ui.common.forms.WarningTextField
+import com.texthip.thip.ui.common.modal.DialogPopup
 import com.texthip.thip.ui.common.topappbar.InputTopAppBar
 import com.texthip.thip.ui.group.makeroom.component.GroupBookSearchBottomSheet
 import com.texthip.thip.ui.group.makeroom.component.GroupInputField
@@ -45,7 +49,9 @@ import com.texthip.thip.ui.theme.ThipTheme.colors
 import com.texthip.thip.ui.theme.ThipTheme.typography
 import com.texthip.thip.utils.rooms.advancedImePadding
 import com.texthip.thip.utils.rooms.toDisplayStrings
+import java.time.format.DateTimeFormatter
 
+private val DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd")
 
 @Composable
 fun GroupMakeRoomScreen(
@@ -66,7 +72,7 @@ fun GroupMakeRoomScreen(
     GroupMakeRoomContent(
         uiState = uiState,
         onNavigateBack = onNavigateBack,
-        onCreateGroup = { 
+        onCreateGroup = {
             viewModel.createGroup(
                 onSuccess = { roomId ->
                     onGroupCreated(roomId)
@@ -74,6 +80,7 @@ fun GroupMakeRoomScreen(
                 onError = { }
             )
         },
+        onToggleConfirmDialog = viewModel::toggleConfirmDialog,
         onSelectBook = viewModel::selectBook,
         onToggleBookSearchSheet = viewModel::toggleBookSearchSheet,
         onSelectGenre = viewModel::selectGenre,
@@ -96,6 +103,7 @@ fun GroupMakeRoomContent(
     uiState: GroupMakeRoomUiState,
     onNavigateBack: () -> Unit = {},
     onCreateGroup: () -> Unit = {},
+    onToggleConfirmDialog: (Boolean) -> Unit = {},
     onSelectBook: (BookData) -> Unit = {},
     onToggleBookSearchSheet: (Boolean) -> Unit = {},
     onSelectGenre: (Int) -> Unit = {},
@@ -115,7 +123,7 @@ fun GroupMakeRoomContent(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .then(if (uiState.showBookSearchSheet) Modifier.blur(5.dp) else Modifier),
+                .then(if (uiState.showBookSearchSheet || uiState.showConfirmDialog || uiState.isLoading) Modifier.blur(5.dp) else Modifier),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -123,7 +131,7 @@ fun GroupMakeRoomContent(
                 title = stringResource(R.string.group_making_group),
                 isRightButtonEnabled = uiState.isFormValid && !uiState.isLoading,
                 onLeftClick = onNavigateBack,
-                onRightClick = onCreateGroup
+                onRightClick = { onToggleConfirmDialog(true) }
             )
 
             Column(
@@ -155,7 +163,7 @@ fun GroupMakeRoomContent(
                     genres = uiState.genres.toDisplayStrings(),
                     selectedIndex = uiState.selectedGenreIndex,
                     onSelect = onSelectGenre,
-                    horizontalArrangement = Arrangement.Start
+                    horizontalArrangement = Arrangement.Center
                 )
                 Spacer(modifier = Modifier.height(12.dp))
 
@@ -274,6 +282,44 @@ fun GroupMakeRoomContent(
                 onLoadMoreSearch = onLoadMoreSearchResults,
                 showGroupBooksTab = false
             )
+        }
+
+        if (uiState.showConfirmDialog) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                DialogPopup(
+                    title = stringResource(R.string.group_create_confirm_title),
+                    description = stringResource(
+                        R.string.group_create_confirm_message,
+                        java.time.LocalDate.now().format(DATE_FORMATTER),
+                        uiState.meetingStartDate.format(DATE_FORMATTER),
+                        uiState.meetingStartDate.format(DATE_FORMATTER),
+                        uiState.meetingEndDate.format(DATE_FORMATTER)
+                    ),
+                    confirmText = stringResource(R.string.confirm),
+                    cancelText = stringResource(R.string.cancel),
+                    onConfirm = {
+                        onToggleConfirmDialog(false)
+                        onCreateGroup()
+                    },
+                    onCancel = {
+                        onToggleConfirmDialog(false)
+                    }
+                )
+            }
+        }
+
+        if (uiState.isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.5f)),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = colors.NeonGreen)
+            }
         }
     }
 }
