@@ -144,6 +144,7 @@ fun GroupBookSearchBottomSheet(
                                         onLoadMore = onLoadMoreSearch
                                     )
                                 }
+
                                 !showGroupBooksTab || selectedTab == 0 -> {
                                     GroupBookListWithScrollbar(
                                         books = displayBooks,
@@ -153,6 +154,7 @@ fun GroupBookSearchBottomSheet(
                                         onLoadMore = onLoadMoreSaved
                                     )
                                 }
+
                                 else -> {
                                     GroupBookListWithScrollbar(
                                         books = displayBooks,

@@ -97,7 +97,7 @@ class GroupMakeRoomViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 isLoadingSavedBooks = true
-                
+
                 if (isInitial) {
                     updateState { it.copy(savedBooks = emptyList(), isLastSavedBooks = false) }
                     savedBooksCursor = null
@@ -110,7 +110,8 @@ class GroupMakeRoomViewModel @Inject constructor(
                 bookRepository.getBooks("SAVED", cursor)
                     .onSuccess { response ->
                         if (response != null) {
-                            val currentList = if (isInitial) emptyList() else _uiState.value.savedBooks
+                            val currentList =
+                                if (isInitial) emptyList() else _uiState.value.savedBooks
                             val newBooks = response.bookList.map { it.toBookData() }
                             updateState {
                                 it.copy(
@@ -167,28 +168,28 @@ class GroupMakeRoomViewModel @Inject constructor(
         loadMoreSearchJob?.cancel()
 
         if (query.isBlank()) {
-            updateState { 
+            updateState {
                 it.copy(
-                    searchResults = emptyList(), 
+                    searchResults = emptyList(),
                     isSearching = false,
                     searchPage = 1,
                     isLastSearchPage = false,
                     currentSearchQuery = ""
-                ) 
+                )
             }
             return
         }
 
         searchJob = viewModelScope.launch {
             delay(300) // 디바운싱
-            updateState { 
+            updateState {
                 it.copy(
                     isSearching = true,
                     searchResults = emptyList(),
                     searchPage = 1,
                     isLastSearchPage = false,
                     currentSearchQuery = query
-                ) 
+                )
             }
 
             try {
@@ -234,23 +235,24 @@ class GroupMakeRoomViewModel @Inject constructor(
 
     fun loadMoreSearchResults() {
         val currentState = _uiState.value
-        if (currentState.isLoadingMoreSearchResults || 
+        if (currentState.isLoadingMoreSearchResults ||
             currentState.isSearching ||
-            currentState.isLastSearchPage || 
+            currentState.isLastSearchPage ||
             currentState.searchResults.isEmpty() ||
-            currentState.currentSearchQuery.isBlank()) {
+            currentState.currentSearchQuery.isBlank()
+        ) {
             return
         }
 
         loadMoreSearchJob?.cancel()
         loadMoreSearchJob = viewModelScope.launch {
             updateState { it.copy(isLoadingMoreSearchResults = true) }
-            
+
             try {
                 val nextPage = currentState.searchPage + 1
                 val result = bookRepository.searchBooks(
                     currentState.currentSearchQuery,
-                    page = nextPage, 
+                    page = nextPage,
                     isFinalized = false
                 )
                 result.onSuccess { response ->

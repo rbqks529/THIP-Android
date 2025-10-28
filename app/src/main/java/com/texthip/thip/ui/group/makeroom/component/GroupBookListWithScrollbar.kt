@@ -36,7 +36,7 @@ fun GroupBookListWithScrollbar(
     onLoadMore: () -> Unit = {}
 ) {
     val listState = rememberLazyListState()
-    
+
     val shouldLoadMore = remember {
         derivedStateOf {
             val layoutInfo = listState.layoutInfo
@@ -76,7 +76,7 @@ fun GroupBookListWithScrollbar(
             )
             Spacer(modifier = Modifier.height(12.dp))
         }
-        
+
         if (isLoadingMore) {
             item {
                 Box(

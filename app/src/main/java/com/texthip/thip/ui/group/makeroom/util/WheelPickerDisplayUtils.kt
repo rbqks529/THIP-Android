@@ -36,14 +36,14 @@ object WheelPickerUtils {
         minDate: LocalDate,
         maxDate: LocalDate
     ): Pair<LocalDate, LocalDate> {
-        // 1. 시작 날짜 유효성 검사
+        // 시작 날짜 유효성 검사
         val validatedStart = when {
             startDate.isBefore(minDate) -> minDate
             startDate.isAfter(maxDate) -> maxDate
             else -> startDate
         }
 
-        // 2. 종료 날짜 유효성 검사 (최소 1일 기간 보장)
+        // 종료 날짜 유효성 검사
         val minEndDate = validatedStart.plusDays(1)
         val validatedEnd = when {
             endDate.isAfter(maxDate) -> maxDate

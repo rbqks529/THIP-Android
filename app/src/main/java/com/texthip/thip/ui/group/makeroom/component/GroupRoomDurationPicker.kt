@@ -169,6 +169,7 @@ fun GroupRoomDurationPicker(
                         modifier = Modifier.padding(top = 12.dp)
                     )
                 }
+
                 !isPickerTouched -> {
                     Text(
                         text = stringResource(R.string.group_room_duration_initial_comment),
@@ -178,6 +179,7 @@ fun GroupRoomDurationPicker(
                         modifier = Modifier.padding(top = 12.dp)
                     )
                 }
+
                 isPickerTouched && recruitmentDays != null -> {
                     Text(
                         text = stringResource(
@@ -190,6 +192,7 @@ fun GroupRoomDurationPicker(
                         modifier = Modifier.padding(top = 12.dp)
                     )
                 }
+
                 else -> {
                     Text(
                         text = stringResource(

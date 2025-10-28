@@ -123,7 +123,11 @@ fun GroupMakeRoomContent(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .then(if (uiState.showBookSearchSheet || uiState.showConfirmDialog || uiState.isLoading) Modifier.blur(5.dp) else Modifier),
+                .then(
+                    if (uiState.showBookSearchSheet || uiState.showConfirmDialog || uiState.isLoading) Modifier.blur(
+                        5.dp
+                    ) else Modifier
+                ),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
