@@ -59,13 +59,19 @@ fun GroupDatePicker(
                 items = years,
                 selectedItem = year,
                 onItemSelected = { newYear ->
-                    val newDate = try {
+                    val fallbackDate = try {
                         LocalDate.of(newYear, month, day)
                     } catch (e: Exception) {
                         val lastDay = LocalDate.of(newYear, month, 1).lengthOfMonth()
                         LocalDate.of(newYear, month, lastDay)
                     }
-                    onDateSelected(newDate)
+                    // 폴백된 날짜가 minDate/maxDate 범위를 벗어나지 않도록 보정
+                    val validatedDate = when {
+                        fallbackDate.isBefore(minDate) -> minDate
+                        fallbackDate.isAfter(maxDate) -> maxDate
+                        else -> fallbackDate
+                    }
+                    onDateSelected(validatedDate)
                 },
                 displayText = { it.toString() }
             )
@@ -86,13 +92,19 @@ fun GroupDatePicker(
                 items = months,
                 selectedItem = month,
                 onItemSelected = { newMonth ->
-                    val newDate = try {
+                    val fallbackDate = try {
                         LocalDate.of(year, newMonth, day)
                     } catch (e: Exception) {
                         val lastDay = LocalDate.of(year, newMonth, 1).lengthOfMonth()
                         LocalDate.of(year, newMonth, lastDay)
                     }
-                    onDateSelected(newDate)
+                    // 폴백된 날짜가 minDate/maxDate 범위를 벗어나지 않도록 보정
+                    val validatedDate = when {
+                        fallbackDate.isBefore(minDate) -> minDate
+                        fallbackDate.isAfter(maxDate) -> maxDate
+                        else -> fallbackDate
+                    }
+                    onDateSelected(validatedDate)
                 },
                 displayText = { it.toString() }
             )
@@ -114,7 +126,13 @@ fun GroupDatePicker(
                 selectedItem = day.coerceAtMost(days.maxOrNull() ?: 1),
                 onItemSelected = { newDay ->
                     val newDate = LocalDate.of(year, month, newDay)
-                    onDateSelected(newDate)
+                    // 날짜가 minDate/maxDate 범위를 벗어나지 않도록 보정
+                    val validatedDate = when {
+                        newDate.isBefore(minDate) -> minDate
+                        newDate.isAfter(maxDate) -> maxDate
+                        else -> newDate
+                    }
+                    onDateSelected(validatedDate)
                 },
                 displayText = { it.toString() }
             )
