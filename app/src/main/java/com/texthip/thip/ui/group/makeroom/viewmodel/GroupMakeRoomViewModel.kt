@@ -3,11 +3,10 @@ package com.texthip.thip.ui.group.makeroom.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.texthip.thip.R
+import com.texthip.thip.data.manager.Genre
 import com.texthip.thip.data.model.book.response.BookSavedResponse
 import com.texthip.thip.data.model.book.response.BookSearchItem
-import com.texthip.thip.data.model.book.response.BookUserSaveList
 import com.texthip.thip.data.model.rooms.request.CreateRoomRequest
-import com.texthip.thip.data.manager.Genre
 import com.texthip.thip.data.provider.StringResourceProvider
 import com.texthip.thip.data.repository.BookRepository
 import com.texthip.thip.data.repository.RoomsRepository
@@ -322,6 +321,10 @@ class GroupMakeRoomViewModel @Inject constructor(
 
     fun updatePassword(password: String) {
         updateState { it.copy(password = password) }
+    }
+
+    fun toggleConfirmDialog(show: Boolean = true) {
+        updateState { it.copy(showConfirmDialog = show) }
     }
 
     fun createGroup(onSuccess: (Int) -> Unit, onError: (String) -> Unit) {

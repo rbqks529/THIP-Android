@@ -29,7 +29,8 @@ data class GroupMakeRoomUiState(
     val isLastSearchPage: Boolean = false,
     val currentSearchQuery: String = "",
     val genres: List<Genre> = emptyList(),
-    val isBookPreselected: Boolean = false
+    val isBookPreselected: Boolean = false,
+    val showConfirmDialog: Boolean = false
 ) {
     // 유효성 검사 로직
     val isDurationValid: Boolean

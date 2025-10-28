@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.texthip.thip.R
 import com.texthip.thip.ui.common.buttons.ActionMediumButton
 import com.texthip.thip.ui.theme.ThipTheme.colors
@@ -50,6 +51,7 @@ fun DialogPopup(
             text = description,
             color = colors.White,
             style = typography.copy_r400_s14,
+            lineHeight = 22.sp
         )
         Spacer(modifier = Modifier.height(20.dp))
 
