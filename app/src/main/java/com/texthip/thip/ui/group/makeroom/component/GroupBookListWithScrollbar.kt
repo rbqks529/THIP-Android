@@ -48,7 +48,7 @@ fun GroupBookListWithScrollbar(
     }
 
     LaunchedEffect(shouldLoadMore.value, hasMore, isLoadingMore) {
-        if (shouldLoadMore.value && hasMore && !isLoadingMore && books.isNotEmpty()) {
+        if (shouldLoadMore.value && hasMore && !isLoadingMore) {
             onLoadMore()
         }
     }

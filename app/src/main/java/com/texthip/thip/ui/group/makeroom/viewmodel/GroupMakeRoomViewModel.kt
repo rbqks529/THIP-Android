@@ -35,7 +35,6 @@ class GroupMakeRoomViewModel @Inject constructor(
     private var searchJob: Job? = null
     private var loadMoreSearchJob: Job? = null
     private var savedBooksCursor: String? = null
-    private var isLoadingSavedBooks = false
 
     companion object {
         private val DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd")
@@ -85,21 +84,25 @@ class GroupMakeRoomViewModel @Inject constructor(
     }
 
     private fun loadBooks() {
-        updateState { it.copy(isLoadingBooks = true) }
         loadSavedBooks(isInitial = true)
         // 모임 생성 화면에서는 저장된 책만 표시
     }
 
     fun loadSavedBooks(isInitial: Boolean = false) {
-        if (isLoadingSavedBooks) return
-        if (!isInitial && _uiState.value.isLastSavedBooks) return
+        val currentState = _uiState.value
+        if (currentState.isLoadingBooks || currentState.isLoadingMoreSavedBooks) return
+        if (!isInitial && currentState.isLastSavedBooks) return
 
         viewModelScope.launch {
             try {
-                isLoadingSavedBooks = true
-
                 if (isInitial) {
-                    updateState { it.copy(savedBooks = emptyList(), isLastSavedBooks = false) }
+                    updateState {
+                        it.copy(
+                            savedBooks = emptyList(),
+                            isLastSavedBooks = false,
+                            isLoadingBooks = true
+                        )
+                    }
                     savedBooksCursor = null
                 } else {
                     updateState { it.copy(isLoadingMoreSavedBooks = true) }
@@ -130,7 +133,6 @@ class GroupMakeRoomViewModel @Inject constructor(
                         }
                     }
             } finally {
-                isLoadingSavedBooks = false
                 updateState {
                     it.copy(
                         isLoadingBooks = false,
